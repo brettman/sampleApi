@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// investigate DI from google:
+//  https://github.com/google/wire
 func main() {
 	router := gin.Default()
 	api := router.Group("/api")
