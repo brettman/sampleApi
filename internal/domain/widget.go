@@ -1,26 +1,22 @@
 package domain
 
+import "time"
+
 // Widget - the primary domain object
 type Widget struct {
 	ID           string
 	Name         string
 	Description  string
 	CurrentValue string
+	TimeStamp    time.Time
 }
 
-// WidgetService - defines the basic Widget operations
-type WidgetService interface {
-
-	// Basic CRUD
-	Widgets() ([]Widget, error)
-	Widget(id string) (Widget, error)
-	AddWidget(widget Widget) (Widget, error)
-	UpdateWidget(widget Widget) (Widget, error)
-	DeleteWidget(id string) error
-
-	// just and excuse to do something else with data layer
-	WidgetsByCategory(category string) ([]Widget, error)
-
-	// some kind of a long running calculation
-	UpdateCurrentValue(id string) (Widget, error)
+// NewWidget - initialize a new widget with some values
+func NewWidget(id string, name string, desc string) *Widget {
+	return &Widget{
+		ID:          id,
+		Name:        name,
+		Description: desc,
+		TimeStamp:   time.Now(),
+	}
 }

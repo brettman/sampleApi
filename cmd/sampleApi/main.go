@@ -1,8 +1,8 @@
 package main
 
 import (
-	"net/http"
-
+	dapi "github.com/brettman/sampleApi/api"
+	"github.com/brettman/sampleApi/internal/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,14 +10,14 @@ import (
 //  https://github.com/google/wire
 func main() {
 	router := gin.Default()
+	widgetService := services.WidgetService{
+		DataContext: "for now this datacontext is just a string",
+	}
+
 	api := router.Group("/api")
 	{
-		api.GET("/widget", widgetHandler)
+		api.GET("/widget", dapi.Widget(&widgetService))
 	}
 
 	router.Run()
-}
-
-func widgetHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, "this is a message that all is ok")
 }
