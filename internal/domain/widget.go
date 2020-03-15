@@ -12,11 +12,6 @@ type Widget struct {
 }
 
 // NewWidget - initialize a new widget with some values
-func NewWidget(id string, name string, desc string) *Widget {
-	return &Widget{
-		ID:          id,
-		Name:        name,
-		Description: desc,
-		TimeStamp:   time.Now(),
-	}
+func NewWidget() *Widget {
+	return &Widget{TimeStamp: time.Now()}
 }
