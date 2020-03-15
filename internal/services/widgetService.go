@@ -37,10 +37,23 @@ func (w *WidgetService) Widget(id string) (*domain.Widget, error) {
 // AddWidget - add a widget to the db
 func (w *WidgetService) AddWidget(widget domain.Widget) (domain.Widget, error) {
 
-	errd := w.DataContext.C("widgets").Insert(&widget)
-	if errd != nil {
-		utils.Log(errd)
+	err := w.DataContext.C("widgets").Insert(&widget)
+	if err != nil {
+		utils.Log(err)
 	}
 
-	return widget, errd
+	return widget, err
+}
+
+// UpdateWidget - add a widget to the db
+func (w *WidgetService) UpdateWidget(widget domain.Widget) (domain.Widget, error) {
+
+	//err := w.DataContext.C("widgets").UpdateId(widget.ID, &widget)
+	selector := bson.M{"id": widget.ID}
+	_, err := w.DataContext.C("widgets").Upsert(selector, &widget)
+	if err != nil {
+		utils.Log(err)
+	}
+
+	return widget, err
 }

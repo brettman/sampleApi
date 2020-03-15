@@ -56,7 +56,13 @@ func AddWidget(service *services.WidgetService) func(c *gin.Context) {
 // UpdateWidget - update a new widget to db
 func UpdateWidget(service *services.WidgetService) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusTooEarly, "Not implemented yet")
+		var w domain.Widget
+		err := c.ShouldBindJSON(&w)
+		utils.Log(err)
+		widget, err1 := service.UpdateWidget(w)
+		utils.Log(err1)
+
+		c.JSON(http.StatusOK, widget)
 	}
 }
 
