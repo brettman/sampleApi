@@ -5,15 +5,15 @@ I'm writing this as another golang demo.  I have several reasons for doing this.
 - It's first weekend of the coronavirus quarantine in Kyiv, and I'm home bored
 - I want to get comfortble with the standard go project layout and need practice
 - Explore some common setup scenarios
-    -- Database setup
-    -- Dependency injection
-    -- API security
+    * Database setup
+    * Dependency injection
+    * API security
 - Explore asynchronous programming in golang
--- _see UpdateCurrentValue on the WidgetService type_
+    * _see UpdateCurrentValue on the WidgetService type_
 - Explore devops considerations
--- deployment
--- testing
--- CI/CD
+    * deployment
+    * testing
+    * CI/CD
 
 --- 
 ## Background and Caveats
