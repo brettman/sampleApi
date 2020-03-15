@@ -6,7 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/brettman/sampleApi/internal/domain"
 	"github.com/brettman/sampleApi/internal/services"
+	"github.com/brettman/sampleApi/internal/utils"
 )
 
 // Widgets - get all widgets
@@ -21,6 +23,7 @@ func Widgets(service *services.WidgetService) func(c *gin.Context) {
 func Widget(service *services.WidgetService) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		id := c.Param("id")
+		log.Printf("id is: %s", id)
 		i, err := service.Widget(id)
 		if err != nil {
 			log.Panic(err)
@@ -32,7 +35,21 @@ func Widget(service *services.WidgetService) func(c *gin.Context) {
 // AddWidget - add a new widget to db
 func AddWidget(service *services.WidgetService) func(c *gin.Context) {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusTooEarly, "Not implemented yet")
+		var w domain.Widget
+		err := c.ShouldBindJSON(&w)
+		utils.Log(err)
+
+		if &w == nil {
+			log.Printf("the widget didn't serialize ")
+		}
+
+		if w.ID == "" {
+			log.Printf("the id for the widget is empty")
+		}
+		widget, err1 := service.AddWidget(w)
+		utils.Log(err1)
+
+		c.JSON(http.StatusAccepted, widget)
 	}
 }
 

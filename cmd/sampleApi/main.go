@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/brettman/sampleApi/internal/utils"
+
 	dapi "github.com/brettman/sampleApi/api"
 	"github.com/brettman/sampleApi/internal/services"
 	"github.com/gin-gonic/gin"
@@ -17,6 +19,7 @@ func main() {
 	widgetService := services.WidgetService{
 		DataContext: getDbSession(),
 	}
+	defer widgetService.DataContext.Session.Close()
 
 	api := router.Group("/api")
 	{
@@ -42,9 +45,24 @@ func main() {
 func getDbSession() *mgo.Database {
 
 	session, err := mgo.Dial("localhost")
+
 	if err != nil {
 		log.Panic(err)
 	}
 	db := session.DB("WidgetDb")
+
+	// todo:  this doesn't seem like a good place to keep this
+	//  but where oh where should does it belong?
+	idx := mgo.Index{
+		Key:        []string{"id"},
+		Unique:     true,
+		DropDups:   true,
+		Background: true,
+		Sparse:     true,
+	}
+
+	idxerr := db.C("widgets").EnsureIndex(idx)
+	utils.Log(idxerr)
+
 	return db
 }

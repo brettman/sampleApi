@@ -1,14 +1,18 @@
 package domain
 
-import "time"
+import (
+	"time"
+)
 
 // Widget - the primary domain object
 type Widget struct {
-	ID           string
-	Name         string
-	Description  string
-	CurrentValue string
-	TimeStamp    time.Time
+	//ID           bson.ObjectId `bson:"_id,omitempty"`
+	ID           string    `json:"id"`
+	SerialNr     string    `json:"serialNr"`
+	Name         string    `json:"name"`
+	Description  string    `json:"description"`
+	CurrentValue string    `json:"currentValue"`
+	TimeStamp    time.Time `json:"timeStamp"`
 }
 
 // NewWidget - initialize a new widget with some values

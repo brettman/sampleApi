@@ -1,10 +1,13 @@
 package services
 
 import (
-	"errors"
+	"log"
+
+	"github.com/brettman/sampleApi/internal/utils"
 
 	"github.com/brettman/sampleApi/internal/domain"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // WidgetService - implementation of the IWidgetService interface
@@ -15,17 +18,29 @@ type WidgetService struct {
 // Widgets - get all widgets from whatever sources... currently only one database
 func (w *WidgetService) Widgets() ([]domain.Widget, error) {
 	widgets := []domain.Widget{}
-	err := errors.New("not implemented")
+	err := w.DataContext.C("widgets").Find(bson.M{}).All(&widgets)
 	return widgets, err
 }
 
 // Widget - get a widget by id
 func (w *WidgetService) Widget(id string) (*domain.Widget, error) {
 
-	i := domain.NewWidget()
-	i.ID = id
-	i.Name = "manually created widget"
-	i.Description = "this manual shit has to stop soon, dude"
+	log.Printf("The id passed to the widget service is: %s", id)
+	widget := domain.Widget{}
+	err := w.DataContext.C("widgets").Find(bson.M{"id": id}).One(&widget)
+	if err != nil {
+		utils.Log(err)
+	}
+	return &widget, nil
+}
 
-	return i, nil
+// AddWidget - add a widget to the db
+func (w *WidgetService) AddWidget(widget domain.Widget) (domain.Widget, error) {
+
+	errd := w.DataContext.C("widgets").Insert(&widget)
+	if errd != nil {
+		utils.Log(errd)
+	}
+
+	return widget, errd
 }
