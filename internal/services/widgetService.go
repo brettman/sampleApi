@@ -2,6 +2,7 @@ package services
 
 import (
 	"log"
+	"time"
 
 	"github.com/brettman/sampleApi/internal/utils"
 
@@ -37,6 +38,9 @@ func (w *WidgetService) Widget(id string) (*domain.Widget, error) {
 // AddWidget - add a widget to the db
 func (w *WidgetService) AddWidget(widget domain.Widget) (domain.Widget, error) {
 
+	t := time.Now()
+	widget.CreatedAt = t
+	widget.LastUpdated = t
 	err := w.DataContext.C("widgets").Insert(&widget)
 	if err != nil {
 		utils.Log(err)
@@ -48,9 +52,17 @@ func (w *WidgetService) AddWidget(widget domain.Widget) (domain.Widget, error) {
 // UpdateWidget - add a widget to the db
 func (w *WidgetService) UpdateWidget(widget domain.Widget) (domain.Widget, error) {
 
-	//err := w.DataContext.C("widgets").UpdateId(widget.ID, &widget)
+	orgWidget := domain.Widget{}
+	orgErr := w.DataContext.C("widgets").Find(bson.M{"id": widget.ID}).One(&orgWidget)
+	if orgErr != nil {
+		log.Println("No document found to update. Create times must match.")
+		return widget, orgErr
+	}
+
+	widget.CreatedAt = orgWidget.CreatedAt
+	widget.LastUpdated = time.Now()
 	selector := bson.M{"id": widget.ID}
-	_, err := w.DataContext.C("widgets").Upsert(selector, &widget)
+	err := w.DataContext.C("widgets").Update(selector, &widget)
 	if err != nil {
 		utils.Log(err)
 	}

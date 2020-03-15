@@ -37,15 +37,16 @@ func AddWidget(service *services.WidgetService) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var w domain.Widget
 		err := c.ShouldBindJSON(&w)
-		utils.Log(err)
-
-		if &w == nil {
-			log.Printf("the widget didn't serialize ")
+		if err != nil {
+			utils.Log(err)
 		}
 
 		if w.ID == "" {
 			log.Printf("the id for the widget is empty")
+			c.JSON(http.StatusBadRequest, w)
+			return
 		}
+
 		widget, err1 := service.AddWidget(w)
 		utils.Log(err1)
 
@@ -59,6 +60,7 @@ func UpdateWidget(service *services.WidgetService) func(c *gin.Context) {
 		var w domain.Widget
 		err := c.ShouldBindJSON(&w)
 		utils.Log(err)
+
 		widget, err1 := service.UpdateWidget(w)
 		utils.Log(err1)
 

@@ -12,10 +12,11 @@ type Widget struct {
 	Name         string    `json:"name"`
 	Description  string    `json:"description"`
 	CurrentValue string    `json:"currentValue"`
-	TimeStamp    time.Time `json:"timeStamp"`
+	CreatedAt    time.Time `json:"createdAt"`
+	LastUpdated  time.Time `json:"lastUpdated"`
 }
 
 // NewWidget - initialize a new widget with some values
 func NewWidget() *Widget {
-	return &Widget{TimeStamp: time.Now()}
+	return &Widget{CreatedAt: time.Now()}
 }
